@@ -41,6 +41,7 @@ dependencies:
   # Standard Icons
   cupertino_icons: ^1.0.8
   flutter_dotenv: ^6.0.0
+  firebase_auth: ^4.20.0
 
 dev_dependencies:
   flutter_test:
