@@ -5,9 +5,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // FIREBASE IMPORTS
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'firebase_options.dart'; 
 
+// MODEL IMPORTS
 import 'features/inventory/data/models/ingredient_model.dart';
+import 'features/shopping_list/data/models/shopping_item_model.dart';
 import 'features/dashboard/presentation/screens/main_screen.dart';
 
 void main() async {
@@ -25,10 +27,25 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // INITIALIZE HIVE for Offline Storage
+  // INITIALIZE HIVE
   await Hive.initFlutter();
-  Hive.registerAdapter(IngredientAdapter());
-  Hive.registerAdapter(IngredientUnitAdapter());
+
+  // --- SAFE ADAPTER REGISTRATION ---
+  
+// Ingredient Unit (ID 0)
+  if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(IngredientUnitAdapter());
+  }
+
+  // Ingredient (ID 1)
+  if (!Hive.isAdapterRegistered(1)) {
+    Hive.registerAdapter(IngredientAdapter());
+  }
+
+  // Shopping Item (ID 2)
+  if (!Hive.isAdapterRegistered(2)) {
+    Hive.registerAdapter(ShoppingItemAdapter());
+  }
 
   runApp(const ProviderScope(child: FridgeForagerApp()));
 }

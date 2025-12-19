@@ -1,10 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/models/ingredient_model.dart';
 import '../data/repository/inventory_repository.dart';
+import '../../auth/logic/auth_provider.dart';
 
-// 1. The Repository Provider (Assumes a dummy User ID 'user_1' for now)
 final inventoryRepositoryProvider = Provider<InventoryRepository>((ref) {
-  return InventoryRepository('user_1'); 
+  final uid = ref.watch(userIdProvider); // Use the SAME provider
+  return InventoryRepository(uid);
 });
 
 // 2. The List State (AsyncValue handles loading/error states automatically)
