@@ -1,0 +1,62 @@
+name: fridge_forager
+description: "A sustainable zero-waste inventory and recipe application featuring offline-first data synchronization, expiry tracking, and ingredient-based recipe matching."
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # --- State Management ---
+  # Riverpod is essential for managing your app state (Fridge items, User session)
+  flutter_riverpod: ^2.5.1
+
+  # --- Navigation ---
+  # Makes handling routes between Dashboard, Recipes, and Modals much easier
+  go_router: ^13.2.0
+
+  # --- Backend (Online) ---
+  # Required for syncing data when the user has internet
+  firebase_core: ^2.32.0
+  cloud_firestore: ^4.17.5
+
+  # --- Local Storage (Offline) ---
+  # Hive is the "Offline" requirement. It stores data on the phone.
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # --- Network API ---
+  # Dio is used to talk to the Spoonacular Recipe API
+  dio: ^5.4.1
+
+  # --- Utilities ---
+  # Intl handles date formatting (e.g., "Oct 24")
+  intl: ^0.19.0
+  # Uuid generates unique IDs for your local fridge items
+  uuid: ^4.3.3
+
+  # Standard Icons
+  cupertino_icons: ^1.0.8
+  flutter_dotenv: ^6.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # --- Code Generation ---
+  # These are required to generate the Hive Adapters (for saving objects)
+  build_runner: ^2.4.8
+  hive_generator: ^2.0.1
+
+  # Linter for code quality
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Assets section (Uncomment and create this folder later for images)
+  assets:
+    - .env

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "738838708088",
+    "project_id": "fridgeforager-d5d75",
+    "storage_bucket": "fridgeforager-d5d75.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:738838708088:android:9ef6e8a13885c84452928d",
+        "android_client_info": {
+          "package_name": "com.example.fridge_forager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpDWG5RKU_4Ywl6mwxdhn0u6bI05a19BU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
