@@ -1,38 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart'; 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // FIREBASE IMPORTS
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart'; 
+import 'firebase_options.dart';
 
 // MODEL IMPORTS
 import 'features/inventory/data/models/ingredient_model.dart';
 import 'features/shopping_list/data/models/shopping_item_model.dart';
+import 'features/auth/logic/user_model.dart';
+import 'features/auth/presentation/screens/auth_screen.dart';
+import 'features/auth/presentation/screens/login_screen.dart';
+import 'features/auth/presentation/screens/signup_screen.dart';
+import 'features/auth/presentation/screens/forgot_password_screen.dart';
+import 'features/auth/presentation/screens/profile_screen.dart';
 import 'features/dashboard/presentation/screens/main_screen.dart';
+import 'core/services/hive_service.dart';
+import 'core/services/shopping_list_hive_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // LOAD .ENV
   try {
-    await dotenv.load(fileName: ".env"); 
+    await dotenv.load(fileName: ".env");
   } catch (e) {
-    print("Warning: .env file not found.");
+    debugPrint("Warning: .env file not found.");
   }
 
   // INITIALIZE FIREBASE
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // INITIALIZE HIVE
   await Hive.initFlutter();
 
   // --- SAFE ADAPTER REGISTRATION ---
-  
-// Ingredient Unit (ID 0)
+
+  // Ingredient Unit (ID 0)
   if (!Hive.isAdapterRegistered(0)) {
     Hive.registerAdapter(IngredientUnitAdapter());
   }
@@ -47,6 +53,20 @@ void main() async {
     Hive.registerAdapter(ShoppingItemAdapter());
   }
 
+  // User Model (ID 3)
+  if (!Hive.isAdapterRegistered(3)) {
+    Hive.registerAdapter(UserModelAdapter());
+  }
+
+  // INITIALIZE HIVE BOXES
+  final hiveService = HiveService();
+  await hiveService.initializeUserBox();
+  await hiveService.initializeSessionBox();
+  await hiveService.initializePreferencesBox();
+
+  final shoppingListHiveService = ShoppingListHiveService();
+  await shoppingListHiveService.initializeBox();
+
   runApp(const ProviderScope(child: FridgeForagerApp()));
 }
 
@@ -58,16 +78,14 @@ class FridgeForagerApp extends ConsumerWidget {
     return MaterialApp(
       title: 'FridgeForager',
       debugShowCheckedModeBanner: false,
-      
-      // THEME DATA
       theme: ThemeData(
         useMaterial3: true,
-        
+
         // Color Palette
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2ECC71), // Emerald Green
-          secondary: const Color(0xFFFF9F1C), // Tangerine
-          surface: Colors.white,              
+          seedColor: const Color(0xFF2ECC71),
+          secondary: const Color(0xFFFF9F1C),
+          surface: Colors.white,
           background: const Color(0xFFF8F9FA),
           error: const Color(0xFFFF6B6B),
           brightness: Brightness.light,
@@ -91,9 +109,14 @@ class FridgeForagerApp extends ConsumerWidget {
             backgroundColor: const Color(0xFF2ECC71),
             foregroundColor: Colors.white,
             elevation: 3,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-            textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            textStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
         ),
 
@@ -113,13 +136,16 @@ class FridgeForagerApp extends ConsumerWidget {
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Color(0xFF2ECC71), width: 2),
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
+          ),
         ),
 
         // Chips
         chipTheme: ChipThemeData(
           backgroundColor: Colors.white,
-          selectedColor: const Color(0xFF2ECC71).withOpacity(0.2),
+          selectedColor: const Color(0xFF2ECC71).withValues(alpha: 0.2),
           labelStyle: const TextStyle(color: Colors.black87),
           secondaryLabelStyle: const TextStyle(color: Color(0xFF27AE60)),
           padding: const EdgeInsets.all(8),
@@ -129,8 +155,14 @@ class FridgeForagerApp extends ConsumerWidget {
           ),
         ),
       ),
-      
-      home: const MainScreen(),
+      routes: {
+        '/login': (context) => const LoginScreen(),
+        '/signup': (context) => const SignupScreen(),
+        '/forgot-password': (context) => const ForgotPasswordScreen(),
+        '/profile': (context) => const ProfileScreen(),
+        '/dashboard': (context) => const MainScreen(),
+      },
+      home: const AuthScreen(),
     );
   }
 }
