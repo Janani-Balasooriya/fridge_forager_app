@@ -19,6 +19,7 @@ import 'features/auth/presentation/screens/profile_screen.dart';
 import 'features/dashboard/presentation/screens/main_screen.dart';
 import 'core/services/hive_service.dart';
 import 'core/services/shopping_list_hive_service.dart';
+import 'features/recipes/data/models/recipe_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,27 +37,30 @@ void main() async {
   // INITIALIZE HIVE
   await Hive.initFlutter();
 
-  // --- SAFE ADAPTER REGISTRATION ---
+// 0: IngredientUnit
+if (!Hive.isAdapterRegistered(0)) {
+  Hive.registerAdapter(IngredientUnitAdapter());
+}
 
-  // Ingredient Unit (ID 0)
-  if (!Hive.isAdapterRegistered(0)) {
-    Hive.registerAdapter(IngredientUnitAdapter());
-  }
+// 1: Ingredient
+if (!Hive.isAdapterRegistered(1)) {
+  Hive.registerAdapter(IngredientAdapter());
+}
 
-  // Ingredient (ID 1)
-  if (!Hive.isAdapterRegistered(1)) {
-    Hive.registerAdapter(IngredientAdapter());
-  }
+// 2: ShoppingItem
+if (!Hive.isAdapterRegistered(2)) {
+  Hive.registerAdapter(ShoppingItemAdapter());
+}
 
-  // Shopping Item (ID 2)
-  if (!Hive.isAdapterRegistered(2)) {
-    Hive.registerAdapter(ShoppingItemAdapter());
-  }
+// 3: UserModel (Existing)
+if (!Hive.isAdapterRegistered(3)) {
+   Hive.registerAdapter(UserModelAdapter()); // Uncomment if you have this adapter generated
+}
 
-  // User Model (ID 3)
-  if (!Hive.isAdapterRegistered(3)) {
-    Hive.registerAdapter(UserModelAdapter());
-  }
+// 4: Recipe (NEW!)
+if (!Hive.isAdapterRegistered(4)) {
+  Hive.registerAdapter(RecipeAdapter()); 
+}
 
   // INITIALIZE HIVE BOXES
   final hiveService = HiveService();
