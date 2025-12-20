@@ -17,8 +17,10 @@ import 'features/auth/presentation/screens/signup_screen.dart';
 import 'features/auth/presentation/screens/forgot_password_screen.dart';
 import 'features/auth/presentation/screens/profile_screen.dart';
 import 'features/dashboard/presentation/screens/main_screen.dart';
+import 'features/onboarding/presentation/screens/welcome_screen.dart';
 import 'core/services/hive_service.dart';
 import 'core/services/shopping_list_hive_service.dart';
+import 'core/services/preferences_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,6 +68,9 @@ void main() async {
 
   final shoppingListHiveService = ShoppingListHiveService();
   await shoppingListHiveService.initializeBox();
+
+  final preferencesService = PreferencesService();
+  await preferencesService.initializeBox();
 
   runApp(const ProviderScope(child: FridgeForagerApp()));
 }
@@ -161,8 +166,25 @@ class FridgeForagerApp extends ConsumerWidget {
         '/forgot-password': (context) => const ForgotPasswordScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/dashboard': (context) => const MainScreen(),
+        '/auth': (context) => const AuthScreen(),
+        '/welcome': (context) => const WelcomeScreen(),
       },
-      home: const AuthScreen(),
+      home: const _HomePage(),
     );
+  }
+}
+
+class _HomePage extends StatelessWidget {
+  const _HomePage();
+
+  @override
+  Widget build(BuildContext context) {
+    final preferencesService = PreferencesService();
+
+    if (preferencesService.hasCompletedOnboarding()) {
+      return const AuthScreen();
+    } else {
+      return const WelcomeScreen();
+    }
   }
 }
