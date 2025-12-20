@@ -1,17 +1,19 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart'; // Import this
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart';
 import '../../features/recipes/data/models/recipe_model.dart';
 
 class ApiService {
   final Dio _dio = Dio();
-  
+
   // READ FROM ENV
   // If the key is missing, this safely falls back to an empty string to prevent crashes
-  final String _apiKey = dotenv.env['SPOONACULAR_API_KEY'] ?? ''; 
-  
+  final String _apiKey = dotenv.env['SPOONACULAR_API_KEY'] ?? '';
+
   final String _baseUrl = 'https://api.spoonacular.com/recipes';
 
-  Future<List<Recipe>> fetchRecipesByIngredients(List<String> ingredients) async {
+  Future<List<Recipe>> fetchRecipesByIngredients(
+      List<String> ingredients) async {
     if (ingredients.isEmpty || _apiKey.isEmpty) return []; // Safety check
 
     try {
@@ -33,7 +35,7 @@ class ApiService {
       }
     } catch (e) {
       // For debugging
-      print("API Error: $e");
+      debugPrint("API Error: $e");
       rethrow;
     }
   }
@@ -60,7 +62,7 @@ class ApiService {
       }
       return [];
     } catch (e) {
-      print("API Error (Instructions): $e");
+      debugPrint("API Error (Instructions): $e");
       return ["Instructions not available for this recipe."];
     }
   }
