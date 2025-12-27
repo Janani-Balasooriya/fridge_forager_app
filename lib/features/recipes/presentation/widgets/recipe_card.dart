@@ -32,10 +32,8 @@ class RecipeCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // IMAGE SECTION
           Stack(
             children: [
-              // Recipe Image
               ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                 child: Image.network(
@@ -51,7 +49,7 @@ class RecipeCard extends ConsumerWidget {
                 ),
               ),
               
-              // HEART BUTTON (Top Right)
+              // HEART BUTTON
               Positioned(
                 top: 8,
                 right: 8,

@@ -27,7 +27,6 @@ class _AddItemModalState extends ConsumerState<AddItemModal> {
   @override
   void initState() {
     super.initState();
-    // Check if we are in Edit Mode
     if (widget.itemToEdit != null) {
       final item = widget.itemToEdit!;
       _nameController.text = item.name;
@@ -42,7 +41,7 @@ class _AddItemModalState extends ConsumerState<AddItemModal> {
     final picked = await showDatePicker(
       context: context,
       initialDate: _expiryDate,
-      firstDate: DateTime.now().subtract(const Duration(days: 365)), // Allow past dates for editing
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
       lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
     );
     if (picked != null) {
@@ -53,7 +52,6 @@ class _AddItemModalState extends ConsumerState<AddItemModal> {
   void _saveItem() {
     if (_nameController.text.isEmpty) return;
 
-    // Logic: If editing, keep old ID. If new, generate new ID.
     final String idToUse = widget.itemToEdit?.id ?? const Uuid().v4();
     final DateTime addedDateToUse = widget.itemToEdit?.addedDate ?? DateTime.now();
 
@@ -78,7 +76,6 @@ class _AddItemModalState extends ConsumerState<AddItemModal> {
 
   @override
   Widget build(BuildContext context) {
-    // (UI Code remains largely the same, just updated title)
     return Padding(
       padding: EdgeInsets.only(
         left: 20, 
@@ -133,7 +130,7 @@ class _AddItemModalState extends ConsumerState<AddItemModal> {
               Expanded(
                 flex: 2,
                 child: TextFormField(
-                  initialValue: _amount.toString(), // Use initialValue for Edit Mode
+                  initialValue: _amount.toString(),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   decoration: const InputDecoration(labelText: "Amount", border: OutlineInputBorder()),
                   onChanged: (val) => setState(() => _amount = double.tryParse(val) ?? 1.0),

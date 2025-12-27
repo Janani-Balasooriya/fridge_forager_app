@@ -9,7 +9,6 @@ class InventoryRepository {
   InventoryRepository(this._uid);
 
   // Helper: Gets the Firestore reference for this user's ingredients
-  // This is a "getter" so it doesn't run until we actually need it (prevents crashes)
   CollectionReference get _ingredientsRef {
     return FirebaseFirestore.instance
         .collection('users')
@@ -57,14 +56,8 @@ class InventoryRepository {
   /// ADD ITEM (Double Write)
   Future<void> addIngredient(Ingredient item) async {
     final box = await Hive.openBox<Ingredient>(boxName);
-    
-    // Save Locally (Instant UI update)
-    // Using .put(id, item) ensures we can delete it easily later by ID
     await box.put(item.id, item);
-
-    // Sync to Cloud
     try {
-      // Use .set() with the item's ID so the Document ID matches our Item ID
       await _ingredientsRef.doc(item.id).set(item.toJson());
     } catch (e) {
       print("Offline: Item saved locally only. Sync failed: $e");
@@ -74,11 +67,7 @@ class InventoryRepository {
   /// DELETE ITEM (Double Delete)
   Future<void> deleteIngredient(String id) async {
     final box = await Hive.openBox<Ingredient>(boxName);
-    
-    // Delete Locally (O(1) operation because we used .put)
     await box.delete(id);
-
-    // Delete from Cloud
     try {
       await _ingredientsRef.doc(id).delete();
     } catch (e) {

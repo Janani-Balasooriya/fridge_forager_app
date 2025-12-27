@@ -11,13 +11,11 @@ class FilterModal extends ConsumerStatefulWidget {
 }
 
 class _FilterModalState extends ConsumerState<FilterModal> {
-  // Local state to manage checkboxes before hitting Apply
   final Set<String> _tempSelected = {};
 
   @override
   void initState() {
     super.initState();
-    // Load current filters when opening the modal
     final currentFilters = ref.read(recipeFilterProvider);
     _tempSelected.addAll(currentFilters);
   }
@@ -33,7 +31,6 @@ class _FilterModalState extends ConsumerState<FilterModal> {
   }
 
   void _applyFilters() {
-    // Update the global provider
     ref.read(recipeFilterProvider.notifier).state = Set.from(_tempSelected);
     Navigator.pop(context); // Close modal
   }

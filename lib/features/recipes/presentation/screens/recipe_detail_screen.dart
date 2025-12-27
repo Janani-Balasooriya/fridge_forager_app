@@ -23,7 +23,6 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
   }
 
   Future<void> _loadInstructions() async {
-    // Simulate it to prevent errors if API isn't ready
     await Future.delayed(const Duration(seconds: 1));
     if (mounted) {
       setState(() {

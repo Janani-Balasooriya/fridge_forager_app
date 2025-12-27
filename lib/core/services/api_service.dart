@@ -6,15 +6,13 @@ import '../../features/recipes/data/models/recipe_model.dart';
 class ApiService {
   final Dio _dio = Dio();
 
-  // READ FROM ENV
-  // If the key is missing, this safely falls back to an empty string to prevent crashes
   final String _apiKey = dotenv.env['SPOONACULAR_API_KEY'] ?? '';
 
   final String _baseUrl = 'https://api.spoonacular.com/recipes';
 
   Future<List<Recipe>> fetchRecipesByIngredients(
       List<String> ingredients) async {
-    if (ingredients.isEmpty || _apiKey.isEmpty) return []; // Safety check
+    if (ingredients.isEmpty || _apiKey.isEmpty) return [];
 
     try {
       final response = await _dio.get(
@@ -23,7 +21,7 @@ class ApiService {
           'ingredients': ingredients.join(','),
           'number': 2,
           'ranking': 1,
-          'apiKey': _apiKey, // Using the variable
+          'apiKey': _apiKey,
         },
       );
 

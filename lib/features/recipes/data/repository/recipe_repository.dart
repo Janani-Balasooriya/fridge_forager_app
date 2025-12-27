@@ -52,7 +52,7 @@ class RecipeRepository {
     try {
       await _favRef.doc(recipe.id.toString()).set(recipe.toJson());
     } catch (e) {
-      print("Offline: Saved locally only");
+      // print("Offline: Saved locally only");
     }
   }
 
@@ -67,7 +67,7 @@ class RecipeRepository {
     try {
       await _favRef.doc(recipeId.toString()).delete();
     } catch (e) {
-      print("Offline: Deleted locally only");
+      // print("Offline: Deleted locally only");
     }
   }
 }

@@ -4,7 +4,6 @@ import '../../inventory/logic/inventory_provider.dart';
 import '../data/models/recipe_model.dart';
 import '../../inventory/data/models/ingredient_model.dart';
 
-// Import Repository and Auth Provider
 import '../data/repository/recipe_repository.dart';
 import '../../auth/logic/auth_provider.dart'; 
 
@@ -17,12 +16,11 @@ final recipeRepositoryProvider = Provider<RecipeRepository>((ref) {
   return RecipeRepository(uid);
 });
 
-// FAVORITES NOTIFIER (With Smart Inventory Check)
+// FAVORITES NOTIFIER
 class FavoritesNotifier extends StateNotifier<AsyncValue<List<Recipe>>> {
   final RecipeRepository _repository;
-  final List<Ingredient> _currentInventory; // We store the current fridge state
+  final List<Ingredient> _currentInventory;
 
-  // Constructor now accepts the Inventory State
   FavoritesNotifier(this._repository, AsyncValue<List<Ingredient>> inventoryState) 
       : _currentInventory = inventoryState.valueOrNull ?? [],
         super(const AsyncValue.loading()) {
@@ -33,9 +31,6 @@ class FavoritesNotifier extends StateNotifier<AsyncValue<List<Recipe>>> {
     try {
       // Get the raw recipes from Hive/Firebase
       final rawRecipes = await _repository.getFavorites();
-
-      // RECALCULATE STATUS based on current fridge
-      // This ensures "Missing Ingredients" are updated if bought them recently!
       final smartRecipes = _recalculateStatus(rawRecipes);
 
       state = AsyncValue.data(smartRecipes);
@@ -100,14 +95,10 @@ class FavoritesNotifier extends StateNotifier<AsyncValue<List<Recipe>>> {
     final isAlreadySaved = currentList.any((r) => r.id == recipe.id);
 
     if (isAlreadySaved) {
-      // Remove it
       final newList = currentList.where((r) => r.id != recipe.id).toList();
       state = AsyncValue.data(newList);
       await _repository.removeFavorite(recipe.id);
     } else {
-      // Add it
-      // We add it raw. The next recalculation (triggered by inventory change or reload)
-      // will update the ingredients.
       state = AsyncValue.data([...currentList, recipe]);
       await _repository.saveFavorite(recipe);
     }
@@ -122,9 +113,6 @@ class FavoritesNotifier extends StateNotifier<AsyncValue<List<Recipe>>> {
 // MAIN FAVORITES PROVIDER
 final favoritesProvider = StateNotifierProvider<FavoritesNotifier, AsyncValue<List<Recipe>>>((ref) {
   final repo = ref.watch(recipeRepositoryProvider);
-  
-  // CRITICAL: Whenever the inventory changes, this provider rebuilds, 
-  // creating a new Notifier that instantly recalculates the recipes.
   final inventoryState = ref.watch(inventoryProvider); 
 
   return FavoritesNotifier(repo, inventoryState);
@@ -144,14 +132,11 @@ final recipeFeedProvider = FutureProvider.autoDispose<List<Recipe>>((ref) async 
   
   if (allIngredients.isEmpty) return [];
 
-  // Determine which ingredients to send to API
   List<String> ingredientsToSearch;
 
   if (activeFilters.isEmpty) {
-    // Default: Use EVERYTHING in the fridge
     ingredientsToSearch = allIngredients.map((e) => e.name).toList();
   } else {
-    // Filtered: Use only what the user selected
     ingredientsToSearch = activeFilters.toList();
   }
 

@@ -112,7 +112,7 @@ class _MyFridgeScreenState extends ConsumerState<MyFridgeScreen> {
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30), // Pill shape
+                        borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
                       ),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -171,7 +171,7 @@ class _MyFridgeScreenState extends ConsumerState<MyFridgeScreen> {
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 80), // Space for FAB
+      padding: const EdgeInsets.only(bottom: 80),
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
@@ -232,7 +232,7 @@ class _MyFridgeScreenState extends ConsumerState<MyFridgeScreen> {
           );
         },
         child: Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6), // Slightly tighter spacing
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             leading: CircleAvatar(
