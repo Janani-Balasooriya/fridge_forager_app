@@ -6,7 +6,6 @@ import '../../data/models/ingredient_model.dart';
 import '../../logic/inventory_provider.dart';
 
 class AddItemModal extends ConsumerStatefulWidget {
-  // NEW: Optional parameter for editing
   final Ingredient? itemToEdit;
 
   const AddItemModal({super.key, this.itemToEdit});
@@ -28,7 +27,7 @@ class _AddItemModalState extends ConsumerState<AddItemModal> {
   @override
   void initState() {
     super.initState();
-    // NEW: Check if we are in Edit Mode
+    // Check if we are in Edit Mode
     if (widget.itemToEdit != null) {
       final item = widget.itemToEdit!;
       _nameController.text = item.name;

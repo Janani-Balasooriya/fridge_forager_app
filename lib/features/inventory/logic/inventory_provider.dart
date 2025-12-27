@@ -8,7 +8,7 @@ final inventoryRepositoryProvider = Provider<InventoryRepository>((ref) {
   return InventoryRepository(uid);
 });
 
-// 2. The List State (AsyncValue handles loading/error states automatically)
+// The List State (AsyncValue handles loading/error states automatically)
 final inventoryProvider = StateNotifierProvider<InventoryNotifier, AsyncValue<List<Ingredient>>>((ref) {
   final repo = ref.watch(inventoryRepositoryProvider);
   return InventoryNotifier(repo);
@@ -33,10 +33,10 @@ class InventoryNotifier extends StateNotifier<AsyncValue<List<Ingredient>>> {
 
   // Add Item
   Future<void> addItem(Ingredient item) async {
-    // 1. Optimistic Update (Update UI before server responds)
+    // Optimistic Update (Update UI before server responds)
     state.whenData((items) => state = AsyncValue.data([...items, item]));
     
-    // 2. Run actual logic
+    // Run actual logic
     try {
       await _repo.addIngredient(item);
     } catch (e) {
@@ -47,18 +47,18 @@ class InventoryNotifier extends StateNotifier<AsyncValue<List<Ingredient>>> {
 
   // DELETE ITEM
   Future<void> deleteItem(String id) async {
-    // 1. Optimistic UI: Remove immediately from list
+    // Optimistic UI: Remove immediately from list
     state.whenData((items) {
       state = AsyncValue.data(items.where((i) => i.id != id).toList());
     });
     
-    // 2. Run actual delete logic
+    // Run actual delete logic
     await _repo.deleteIngredient(id);
   }
 
   // UPDATE ITEM (Reuse addItem logic)
   Future<void> updateItem(Ingredient updatedItem) async {
-    // 1. Optimistic UI: Find and replace
+    // Optimistic UI: Find and replace
     state.whenData((items) {
       state = AsyncValue.data([
         for (final item in items)
@@ -66,7 +66,7 @@ class InventoryNotifier extends StateNotifier<AsyncValue<List<Ingredient>>> {
       ]);
     });
 
-    // 2. Save to DB (Since ID is same, Repository's add/set logic handles overwrite)
+    // Save to DB (Since ID is same, Repository's add/set logic handles overwrite)
     await _repo.addIngredient(updatedItem);
   }
 }

@@ -54,7 +54,7 @@ if (!Hive.isAdapterRegistered(2)) {
 
 // 3: UserModel (Existing)
 if (!Hive.isAdapterRegistered(3)) {
-   Hive.registerAdapter(UserModelAdapter()); // Uncomment if you have this adapter generated
+   Hive.registerAdapter(UserModelAdapter());
 }
 
 // 4: Recipe (NEW!)

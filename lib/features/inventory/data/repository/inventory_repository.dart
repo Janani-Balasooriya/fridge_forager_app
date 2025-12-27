@@ -17,15 +17,15 @@ class InventoryRepository {
         .collection('ingredients');
   }
 
-  /// 1. GET DATA (Hybrid Sync Strategy)
+  /// GET DATA (Hybrid Sync Strategy)
   Future<List<Ingredient>> getIngredients() async {
     final box = await Hive.openBox<Ingredient>(boxName);
 
     try {
-      // A. Try fetching from Cloud
+      // Try fetching from Cloud
       final snapshot = await _ingredientsRef.get();
 
-      // B. If Cloud has data, update Local (Sync Down)
+      // If Cloud has data, update Local (Sync Down)
       if (snapshot.docs.isNotEmpty) {
         final remoteIngredients = snapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>;
@@ -48,21 +48,21 @@ class InventoryRepository {
       }
 
     } catch (e) {
-      // C. Offline Mode? Fallback to Hive
+      // Offline Mode? Fallback to Hive
       print("Offline Mode active: Fetching from Hive only. Error: $e");
       return box.values.toList();
     }
   }
 
-  /// 2. ADD ITEM (Double Write)
+  /// ADD ITEM (Double Write)
   Future<void> addIngredient(Ingredient item) async {
     final box = await Hive.openBox<Ingredient>(boxName);
     
-    // A. Save Locally (Instant UI update)
+    // Save Locally (Instant UI update)
     // Using .put(id, item) ensures we can delete it easily later by ID
     await box.put(item.id, item);
 
-    // B. Sync to Cloud
+    // Sync to Cloud
     try {
       // Use .set() with the item's ID so the Document ID matches our Item ID
       await _ingredientsRef.doc(item.id).set(item.toJson());
@@ -71,14 +71,14 @@ class InventoryRepository {
     }
   }
 
-  /// 3. DELETE ITEM (Double Delete)
+  /// DELETE ITEM (Double Delete)
   Future<void> deleteIngredient(String id) async {
     final box = await Hive.openBox<Ingredient>(boxName);
     
-    // A. Delete Locally (O(1) operation because we used .put)
+    // Delete Locally (O(1) operation because we used .put)
     await box.delete(id);
 
-    // B. Delete from Cloud
+    // Delete from Cloud
     try {
       await _ingredientsRef.doc(id).delete();
     } catch (e) {

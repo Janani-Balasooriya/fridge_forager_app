@@ -10,32 +10,32 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # --- State Management ---
-  # Riverpod is essential for managing your app state (Fridge items, User session)
+  # State ManagementP
+  # Riverpod is essential for managing app state (Fridge items, User session)
   flutter_riverpod: ^2.5.1
 
-  # --- Navigation ---
+  # Navigation
   # Makes handling routes between Dashboard, Recipes, and Modals much easier
   go_router: ^13.2.0
 
-  # --- Backend (Online) ---
+  # Backend (Online)
   # Required for syncing data when the user has internet
   firebase_core: ^2.32.0
   cloud_firestore: ^4.17.5
 
-  # --- Local Storage (Offline) ---
+  # Local Storage (Offline)
   # Hive is the "Offline" requirement. It stores data on the phone.
   hive: ^2.2.3
   hive_flutter: ^1.1.0
 
-  # --- Network API ---
+  # Network API
   # Dio is used to talk to the Spoonacular Recipe API
   dio: ^5.4.1
 
-  # --- Utilities ---
-  # Intl handles date formatting (e.g., "Oct 24")
+  # Utilities
+  # Intl handles date formatting (e.g. "Oct 27")
   intl: ^0.19.0
-  # Uuid generates unique IDs for your local fridge items
+  # Uuid generates unique IDs for local fridge items
   uuid: ^4.3.3
 
   # Standard Icons
@@ -47,8 +47,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # --- Code Generation ---
-  # These are required to generate the Hive Adapters (for saving objects)
+  # Code Generation
+  # Required to generate the Hive Adapters (for saving objects)
   build_runner: ^2.4.8
   hive_generator: ^2.0.1
 
@@ -58,6 +58,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # Assets section (Uncomment and create this folder later for images)
   assets:
     - .env

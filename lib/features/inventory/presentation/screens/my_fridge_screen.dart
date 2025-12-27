@@ -60,7 +60,7 @@ class _MyFridgeScreenState extends ConsumerState<MyFridgeScreen> {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (err, stack) => Center(child: Text('Error: $err')),
           data: (ingredients) {
-            // --- 1. SEARCH FILTER ---
+            // SEARCH FILTER
             // Filter the master list based on the search text first
             final searchResults = ingredients.where((item) {
               return item.name.toLowerCase().contains(_searchQuery);
@@ -70,7 +70,7 @@ class _MyFridgeScreenState extends ConsumerState<MyFridgeScreen> {
               return const Center(child: Text("Your fridge is empty! Add items +"));
             }
 
-            // --- 2. CATEGORY FILTERS ---
+            // CATEGORY FILTERS
             final now = DateTime.now();
             final today = DateTime(now.year, now.month, now.day);
 
@@ -95,7 +95,7 @@ class _MyFridgeScreenState extends ConsumerState<MyFridgeScreen> {
 
             return Column(
               children: [
-                // --- SEARCH BAR UI ---
+                // SEARCH BAR UI
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextField(
@@ -120,7 +120,7 @@ class _MyFridgeScreenState extends ConsumerState<MyFridgeScreen> {
                   ),
                 ),
 
-                // --- TAB VIEWS ---
+                // TAB VIEWS
                 Expanded(
                   child: TabBarView(
                     children: [
@@ -152,7 +152,7 @@ class _MyFridgeScreenState extends ConsumerState<MyFridgeScreen> {
     );
   }
 
-  // --- REUSABLE LIST BUILDER ---
+  // REUSABLE LIST BUILDER
   Widget _buildList(List<Ingredient> items) {
     if (items.isEmpty) {
       return Center(
@@ -180,7 +180,7 @@ class _MyFridgeScreenState extends ConsumerState<MyFridgeScreen> {
     );
   }
 
-  // --- INDIVIDUAL LIST ITEM ---
+  // INDIVIDUAL LIST ITEM
   Widget _buildListItem(Ingredient item, BuildContext context) {
     final now = DateTime.now();
     final difference = DateTime(item.expiryDate.year, item.expiryDate.month, item.expiryDate.day)
